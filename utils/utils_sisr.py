@@ -819,7 +819,7 @@ if __name__ == '__main__':
         img_d = classical_degradation(img, k, sf=sf)
         print(img_d.shape)
 
-    k = anisotropic_Gaussian(ksize=7, theta=0.25*np.pi, l1=0.01, l2=0.01)
+    # k = anisotropic_Gaussian(ksize=7, theta=0.25*np.pi, l1=0.01, l2=0.01)
     #print(k)
 #    util.imshow(k*10)
 

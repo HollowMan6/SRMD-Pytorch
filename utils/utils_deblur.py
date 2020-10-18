@@ -260,8 +260,7 @@ def opt_fft_size(n):
             while e5 <= LUT_size:
                 e7 = e5
                 while e7 <= LUT_size:
-                    if e7 <= LUT_size:
-                        opt_fft_size_LUT[e7-1] = e7
+                    opt_fft_size_LUT[e7-1] = e7
                     if e7*11 <= LUT_size:
                         opt_fft_size_LUT[e7*11-1] = e7*11
                     if e7*13 <= LUT_size:
@@ -342,7 +341,7 @@ def wrap_boundary(img, img_size):
     r_C[:, -alpha:] = A[:, :alpha]
 
     if alpha == 1:
-        C2 = C2 = solve_min_laplacian(r_C[alpha-1:, alpha-1:])
+        C2 = solve_min_laplacian(r_C[alpha-1:, alpha-1:])
         r_C[alpha-1:, alpha-1:] = C2
     else:
         C2 = solve_min_laplacian(r_C[alpha-1:-alpha+1, alpha-1:-alpha+1])
@@ -458,11 +457,11 @@ def fspecial_laplacian(alpha):
 
 
 def fspecial_log(hsize, sigma):
-    raise(NotImplemented)
+    raise(NotImplementedError())
 
 
 def fspecial_motion(motion_len, theta):
-    raise(NotImplemented)
+    raise(NotImplementedError())
 
 
 def fspecial_prewitt():

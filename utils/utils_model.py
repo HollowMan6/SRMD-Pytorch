@@ -283,7 +283,7 @@ def describe_params(model):
     if isinstance(model, torch.nn.DataParallel):
         model = model.module
     msg = '\n'
-    msg += ' | {:^6s} | {:^6s} | {:^6s} | {:^6s} || {:<20s}'.format('mean', 'min', 'max', 'std', 'shape', 'param_name') + '\n'
+    msg += ' | {:^6s} | {:^6s} | {:^6s} | {:^6s} | {:^6s} || {:<20s}'.format('mean', 'min', 'max', 'std', 'shape', 'param_name') + '\n'
     for name, param in model.state_dict().items():
         if not 'num_batches_tracked' in name:
             v = param.data.clone().float()

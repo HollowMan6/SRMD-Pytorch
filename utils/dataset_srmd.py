@@ -126,7 +126,7 @@ class DatasetSRMD(data.Dataset):
         else:
 
             img_H, img_L = util.single2tensor3(img_H), util.single2tensor3(img_L)
-            noise_level = noise_level = torch.FloatTensor([self.sigma_test])
+            noise_level = torch.FloatTensor([self.sigma_test])
 
         # ------------------------------------
         # add noise

@@ -68,14 +68,14 @@ class SRMD(nn.Module):
 
 
 if __name__ == '__main__':
-    from utils import utils_model
-    model = SRMD(in_nc=18, out_nc=3, nc=64, nb=15, upscale=4, act_mode='R', upsample_mode='pixelshuffle')
-    print(utils_model.describe_model(model))
+    # from utils import utils_model
+    # model = SRMD(in_nc=18, out_nc=3, nc=64, nb=15, upscale=4, act_mode='R', upsample_mode='pixelshuffle')
+    # print(utils_model.describe_model(model))
 
-    x = torch.randn((2, 3, 100, 100))
-    k_pca = torch.randn(2, 15, 1, 1)
-    x = model(x, k_pca)
-    print(x.shape)
+    # x = torch.randn((2, 3, 100, 100))
+    # k_pca = torch.randn(2, 15, 1, 1)
+    # x = model(x, k_pca)
+    # print(x.shape)
 
     #  run models/network_srmd.py
 
