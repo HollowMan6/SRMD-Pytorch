@@ -68,6 +68,7 @@ class SRMD(nn.Module):
 
 
 if __name__ == '__main__':
+    pass
     # from utils import utils_model
     # model = SRMD(in_nc=18, out_nc=3, nc=64, nb=15, upscale=4, act_mode='R', upsample_mode='pixelshuffle')
     # print(utils_model.describe_model(model))
