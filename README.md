@@ -21,6 +21,23 @@
 
 SRMD已经训练的模型保存在[`model_zoo`](model_zoo)中。
 
+***SRMD模型***：
+* srmd_x2.pth
+* srmd_x3.pth
+* srmd_x4.pth
+
+**输入**：19维的数据，其中15维为经过PCA降维后进行维度拉伸的模糊核，还有1个维度为图片噪声维度，另外3个维度分别为图片的RGB通道，即模型输入为：(19,图片宽,图片高)
+
+图片经过GAN网络的处理，最后进行PixelShuffle，放大指定的倍数。
+
+**输出**：图片的RGB通道，即模型输出为：(3,图片宽,图片高)
+
+
+***SRMD模型***：
+* srmdnf_x2.pth
+* srmdnf_x3.pth
+* srmdnf_x4.pth
+
 ## 训练
 
 [`options/train_srmd.json`](options/train_srmd.json)中定义了模型的参数，可以进行修改调参。同时其中也给定了训练集和测试集路径的定义等。
@@ -43,7 +60,7 @@ SRMD已经训练的模型保存在[`model_zoo`](model_zoo)中。
 
 按照默认配置，默认[`testsets/set5`](testsets/set5)为测试集。
 
-请确保PCA降维数据文件[`kernels/srmd_pca_matlab.mat`](kernels/srmd_pca_matlab.mat)存在。
+请确保PCA降维数据文件[`kernels/srmd_pca_matlab.mat`](kernels/srmd_pca_matlab.mat)存在（使用该文件预定义的参数对模糊核进行PCA降维，准备处理输入数据）。
 
 测试结果和记录存放在[`results`](results)中。
 
