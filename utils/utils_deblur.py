@@ -476,8 +476,6 @@ def fspecial_sobel():
 def fspecial(filter_type, *args, **kwargs):
     if filter_type == 'average':
         return fspecial_average(*args, **kwargs)
-    if filter_type == 'disk':
-        return fspecial_disk(*args, **kwargs)
     if filter_type == 'gaussian':
         return fspecial_gaussian(*args, **kwargs)
     if filter_type == 'laplacian':

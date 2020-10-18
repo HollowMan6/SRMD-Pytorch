@@ -502,7 +502,9 @@ def circular_pad(x, pad):
 
 
 def pad_circular(input, padding):
-    # type: (Tensor, List[int]) -> Tensor
+    '''
+    type: (Tensor, List[int]) -> Tensor
+    '''
     """
     Arguments
     :param input: tensor of shape :math:`(N, C_{\text{in}}, H, [W, D]))`
@@ -518,7 +520,9 @@ def pad_circular(input, padding):
 
 
 def dim_pad_circular(input, padding, dimension):
-    # type: (Tensor, int, int) -> Tensor
+    '''
+    type: (Tensor, int, int) -> Tensor
+    '''
     input = torch.cat([input, input[[slice(None)] * (dimension - 1) +
                       [slice(0, padding)]]], dim=dimension - 1)
     input = torch.cat([input[[slice(None)] * (dimension - 1) +
