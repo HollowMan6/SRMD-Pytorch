@@ -1,0 +1,11 @@
+20-10-17 21:32:44.267 : Model path: model_zoo\srmdnf_x4.pth
+20-10-17 21:32:44.267 : Params number: 1552048
+20-10-17 21:32:44.268 : model_name:srmdnf_x4, model sigma:0, image sigma:0
+20-10-17 21:32:44.269 : testsets\set5
+20-10-17 21:32:45.615 : baby.bmp - PSNR: 32.17 dB; SSIM: 0.8677.
+20-10-17 21:32:46.202 : bird.bmp - PSNR: 32.42 dB; SSIM: 0.9206.
+20-10-17 21:32:46.622 : butterfly.bmp - PSNR: 26.55 dB; SSIM: 0.8939.
+20-10-17 21:32:47.099 : head.bmp - PSNR: 29.92 dB; SSIM: 0.7196.
+20-10-17 21:32:47.563 : woman.bmp - PSNR: 29.05 dB; SSIM: 0.9002.
+20-10-17 21:32:47.605 : Average PSNR/SSIM(RGB) - set5_srmdnf_x4 - x4 --PSNR: 30.02 dB; SSIM: 0.8604
+20-10-17 21:32:47.606 : Average PSNR/SSIM( Y ) - set5_srmdnf_x4 - x4 - PSNR: 31.93 dB; SSIM: 0.8912
