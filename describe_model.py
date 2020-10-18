@@ -27,9 +27,9 @@ for model_name in model_list:
     for k, v in model.named_parameters():
         v.requires_grad = False
     model = model.to(device)
-    x = (18, 100, 100)
+    x = (18, 1, 1)
     if 'nf' not in model_name:  # noise-free SR
-        x = (19, 100, 100)
+        x = (19, 1, 1)
     print(utils_model.describe_model(model))
     summary(model, input_size=x)
     print("")

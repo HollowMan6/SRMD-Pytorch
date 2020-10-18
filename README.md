@@ -19,15 +19,69 @@
 
 [Python库依赖](../../network/dependencies)(建议在[Anaconda](https://www.anaconda.com)环境下操作)
 
+SRMD已经训练的模型保存在[`model_zoo`](model_zoo)中。
+
 ## 训练
 
-[`options/train_srmd.json`](options/train_srmd.json)中定义了模型的参数，可以进行修改调参。同时其中也给定了训练集和测试集路径的定义。
+[`options/train_srmd.json`](options/train_srmd.json)中定义了模型的参数，可以进行修改调参。同时其中也给定了训练集和测试集路径的定义等。
 
-使用时，默认请向`trainsets/trainH`中添加高质量图片。`testsets/set5`为测试集。
+按照默认配置，请向[`trainsets/trainH`](trainsets/trainH)中添加高质量图片来进行模型的训练。
 
-生成后的模型将保存在`model_zoo`中。
+[`testsets/set5`](testsets/set5)为测试集。
 
-直接运行`main_train_srmd.py`即可训练。
+直接运行[`main_train_srmd.py`](main_train_srmd.py)即可进行训练。
+
+训练日志保存在[`superresolution\srmd\train.log`](superresolution\srmd\train.log)，每次训练开始时的配置保存在[`superresolution\srmd\options`](superresolution\srmd\options)文件夹中。
+
+[`options/train_srmd.json`](options/train_srmd.json)中`checkpoint_test`配置每进行5个epoch训练后进行测试，并将测试生成的图片保存在[`superresolution\srmd\images`](superresolution\srmd\images)中;`checkpoint_save`配置每进行5个epoch训练后保存当前模型。
+
+训练产生的模型保存在[`superresolution\srmd\models`](superresolution\srmd\models)文件夹中。
+
+## 测试
+
+直接运行[`main_test_srmd.py`](main_test_srmd.py)即可对指定模型进行测试。
+
+按照默认配置，默认[`testsets/set5`](testsets/set5)为测试集。
+
+请确保PCA降维数据文件[`kernels/srmd_pca_matlab.mat`](kernels/srmd_pca_matlab.mat)存在。
+
+测试结果和记录存放在[`results`](results)中。
+
+## 查看网络描述
+
+直接运行[`describe_model.py`](describe_model.py)即可查看每个SRMD模型(6个)的网络结构和输出。
+
+## 转换为ONNX/NCNN模型
+
+确保SRMD已经训练的模型保存在[`model_zoo`](model_zoo)中，直接运行[`pytorch2onnx.py`](pytorch2onnx.py)即可将pytorch模型转为onnx模型。
+
+转换后的模型存放在[`onnx_model`](onnx_model)中。
+
+随后步骤参考：https://github.com/Tencent/ncnn/blob/master/docs/how-to-use-and-FAQ/use-ncnn-with-pytorch-or-onnx.md
+
+使用`onnx-simplifier`简化生成后的ONNX模型：
+
+```bash
+cd onnx_model
+pip install onnx-simplifier
+python -m onnxsim srmd_x2.onnx srmd_x2-sim.onnx
+python -m onnxsim srmd_x3.onnx srmd_x3-sim.onnx
+python -m onnxsim srmd_x4.onnx srmd_x4-sim.onnx
+python -m onnxsim srmdnf_x2.onnx srmdnf_x2-sim.onnx
+python -m onnxsim srmdnf_x3.onnx srmdnf_x3-sim.onnx
+python -m onnxsim srmdnf_x4.onnx srmdnf_x4-sim.onnx
+```
+
+然后就可以使用编译好的NCNN工具将ONNX模型转化成NCNN模型：
+
+```bash
+onnx2ncnn srmd_x2-sim.onnx srmd_x2.param srmd_x2.bin
+onnx2ncnn srmd_x3-sim.onnx srmd_x3.param srmd_x2.bin
+onnx2ncnn srmd_x4-sim.onnx srmd_x4.param srmd_x2.bin
+onnx2ncnn srmdnf_x2-sim.onnx srmdnf_x2.param srmd_x2.bin
+onnx2ncnn srmdnf_x3-sim.onnx srmdnf_x3.param srmd_x2.bin
+onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmd_x2.bin
+```
 
 # SRMD Pytorch
 
