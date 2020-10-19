@@ -6,7 +6,6 @@ from utils.network_srmd import SRMD as net
 n_channels = 3            # fixed
 nc = 128                  # fixed, number of channels
 nb = 12                   # fixed, number of conv layers
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 model_list = ['srmd_x2', 'srmd_x3', 'srmd_x4', 'srmdnf_x2', 'srmdnf_x3', 'srmdnf_x4']
 model_pool = 'model_zoo'
@@ -23,7 +22,6 @@ for model_name in model_list:
     model.eval()
     for k, v in model.named_parameters():
         v.requires_grad = False
-    model = model.to(device)
     x = torch.randn((1, 3, 1, 1))
     k_pca = torch.randn(1, 15, 1, 1)
     m = k_pca.repeat(1, 1, x.size()[-2], x.size()[-1])
