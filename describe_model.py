@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+# by 'hollowman6' from Lanzhou University(兰州大学)
+
 import re
 import os
 import torch

@@ -184,13 +184,31 @@ def imread_uint(path, n_channels=3):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
     return img
 
+def imread_uint_alpha(path, n_channels=3):
+    #  input: path
+    # output: HxWx3(RGB or GGG), or HxWx1 (G)
+    alpha = None
+    if n_channels == 1:
+        img = cv2.imread(path, 0)  # cv2.IMREAD_GRAYSCALE
+        img = np.expand_dims(img, axis=2)  # HxWx1
+    elif n_channels == 3:
+        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        if img.shape[2] == 4:
+            alpha = img[:,:,3]
+        if img.ndim == 2:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
+        else:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
+    return img, alpha
 
 # --------------------------------------------
 # matlab's imwrite
 # --------------------------------------------
 def imsave(img, img_path):
     img = np.squeeze(img)
-    if img.ndim == 3:
+    if img.shape[2] == 4:
+        img = img[:, :, [2, 1, 0, 3]]
+    elif img.ndim == 3:
         img = img[:, :, [2, 1, 0]]
     cv2.imwrite(img_path, img)
 
@@ -198,6 +216,8 @@ def imwrite(img, img_path):
     img = np.squeeze(img)
     if img.ndim == 3:
         img = img[:, :, [2, 1, 0]]
+    elif img.ndim == 4:
+        img = img[:, :, [2, 1, 0, 3]]
     cv2.imwrite(img_path, img)
 
 
