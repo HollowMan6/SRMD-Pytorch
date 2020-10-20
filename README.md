@@ -9,7 +9,7 @@
 [![forks](https://img.shields.io/github/forks/HollowMan6/SRMD-Pytorch?style=social)](../../network/members)
 
 [![Open Source Love](https://img.shields.io/badge/-%E2%9D%A4%20Open%20Source-Green?style=flat-square&logo=Github&logoColor=white&link=https://hollowman6.github.io/fund.html)](https://hollowman6.github.io/fund.html)
-[![MIT Licence](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/mit-license.php)
+[![GPL Licence](https://img.shields.io/badge/license-GPL-blue)](https://opensource.org/licenses/GPL-3.0/)
 [![Repo-Size](https://img.shields.io/github/repo-size/HollowMan6/SRMD-Pytorch.svg)](../../archive/master.zip)
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/HollowMan6/SRMD-Pytorch.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/SRMD-Pytorch/alerts/)
@@ -74,8 +74,9 @@ main_srmd.py -i 输入路径 -o 输出路径 [选项]...
   -c cuda              开启 CUDA GPU 计算 (默认关闭)
   -f format            输出图片格式 (jpg/png/..., 默认=png)
 
-注: 支持的图片格式 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'
 ```
+
+***支持的图片格式 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'***
 
 ***注：X8性能模式（又称TTA模式）为讲图片另外进行7种不同的旋转等数据增强操作，然后取放大后各个像素点平均值，从而使得图片质量更佳，但是会比原来慢8倍***
 
@@ -84,6 +85,10 @@ main_srmd.py -i 输入路径 -o 输出路径 [选项]...
 - `scale`=放大比例，2=放大2x，3=放大3x，4=放大4x
 
 直接运行[`main_srmd.py`](main_srmd.py)即可进行模型的使用来对图片进行放大。
+
+### 运行过程中出现 RuntimeError: CUDA error: unspecified launch failure
+
+此问题在开启`-c`参数 CUDA GPU 计算时在处理分辨率较大的图片会出现此问题，一般为显存溢出导致，建议通过运行时不加`-c`关闭 CUDA GPU 计算。
 
 ## 训练模型
 
@@ -189,7 +194,7 @@ The image is processed by GAN network, and finally PixelSuffle is performed to e
 
 ## Use Model
 
-***This script uses the model trained by the original author for prediction. If necessary, please train the model and define blur kernel and PCA dimension reduction data by yourself.***
+***This script uses the model trained by the original author for prediction. If necessary, please train the model, define blur kernel and PCA dimension reduction data by yourself.***
 
 **The bicubic interpolation method is used to enlarge the alpha channel, which makes up for the defect that the source model does not support transparent (Alpha) channel.**
 
@@ -209,16 +214,21 @@ main_srmd.py -i infile -o outfile [options]...
   -c cuda              enable CUDA GPU caculating (default disabled)
   -f format            output image format (jpg/png/..., default=png)
 
-Note: Supported image extensions 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'
 ```
 
-***Note: the X8 performance mode (also known as TTA mode) is to perform seven different kinds of data augment operations such as rotation etc., and then take the average value of each pixel after amplification, so as to make the image quality better, it will be 8 times slower than the original mode.***
+***Supported image extensions 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'***
+
+***Note: the X8 performance mode (also known as TTA mode) is to perform seven different kinds of data augment operations such as rotation etc., and then take the average value of each pixel after upscale. So as to improve the image quality, it will be 8 times slower than the original mode.***
 
 - `input-path` and `output-path` accept either file path or directory path
-- `noise-level` = noise level, large value means strong denoise effect, -1 = no effect
+- `noise-level` = noise level, larger value means stronger denoise effect, -1 = no effect
 - `scale` = scale level, 2 = upscale 2x, 3 = upscale 3x, 4 = upscale 4x
 
 Run [`main_srmd.py`](main_srmd.py)irectly and then you can use the model to enlarge the picture。
+
+### Encounter `RuntimeError: CUDA error: unspecified launch failure`
+
+This problem occurs when the '-c' parameter CUDA GPU caculating is turned on. It is usually caused by GPU memory overflow. It is recommended to turn off CUDA GPU calculation by without adding '-c' during runtime when this occurs.
 
 ## Training Models
 

@@ -101,12 +101,12 @@ def imssave(imgs, img_path):
     """
     imgs: list, N images of size WxHxC
     """
-    img_name, ext = os.path.splitext(os.path.basename(img_path))
+    img_name, _ = os.path.splitext(os.path.basename(img_path))
     for i, img in enumerate(imgs):
         if img.ndim == 3:
             img = img[:, :, [2, 1, 0]]
         new_path = os.path.join(os.path.dirname(img_path), img_name+str('_{:04d}'.format(i))+'.png')
-        cv2.imwrite(new_path, img)
+        cv2.imencode(os.path.splitext(new_path)[1], img)[1].tofile(new_path)
 
 
 def split_imageset(original_dataroot, taget_dataroot, n_channels=3, p_size=512, p_overlap=96, p_max=800):
@@ -173,11 +173,12 @@ def mkdir_and_rename(path):
 def imread_uint(path, n_channels=3):
     #  input: path
     # output: HxWx3(RGB or GGG), or HxWx1 (G)
+    raw_data = np.fromfile(path, dtype=np.uint8)
     if n_channels == 1:
-        img = cv2.imread(path, 0)  # cv2.IMREAD_GRAYSCALE
+        img = cv2.imdecode(raw_data, 0)  # cv2.IMREAD_GRAYSCALE
         img = np.expand_dims(img, axis=2)  # HxWx1
     elif n_channels == 3:
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        img = cv2.imdecode(raw_data, cv2.IMREAD_UNCHANGED)  # BGR or G
         if img.ndim == 2:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
         else:
@@ -187,12 +188,13 @@ def imread_uint(path, n_channels=3):
 def imread_uint_alpha(path, n_channels=3):
     #  input: path
     # output: HxWx3(RGB or GGG), or HxWx1 (G)
+    raw_data = np.fromfile(path, dtype=np.uint8)
     alpha = None
     if n_channels == 1:
-        img = cv2.imread(path, 0)  # cv2.IMREAD_GRAYSCALE
+        img = cv2.imdecode(raw_data, 0)  # cv2.IMREAD_GRAYSCALE
         img = np.expand_dims(img, axis=2)  # HxWx1
     elif n_channels == 3:
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        img = cv2.imdecode(raw_data, cv2.IMREAD_UNCHANGED)  # BGR or G
         if img.shape[2] == 4:
             alpha = img[:,:,3]
         if img.ndim == 2:
@@ -210,7 +212,7 @@ def imsave(img, img_path):
         img = img[:, :, [2, 1, 0, 3]]
     elif img.ndim == 3:
         img = img[:, :, [2, 1, 0]]
-    cv2.imwrite(img_path, img)
+    cv2.imencode(os.path.splitext(img_path)[1], img)[1].tofile(img_path)
 
 def imwrite(img, img_path):
     img = np.squeeze(img)
@@ -218,7 +220,7 @@ def imwrite(img, img_path):
         img = img[:, :, [2, 1, 0]]
     elif img.ndim == 4:
         img = img[:, :, [2, 1, 0, 3]]
-    cv2.imwrite(img_path, img)
+    cv2.imencode(os.path.splitext(img_path)[1], img)[1].tofile(img_path)
 
 
 
@@ -228,7 +230,8 @@ def imwrite(img, img_path):
 def read_img(path):
     # read image by cv2
     # return: Numpy float32, HWC, BGR, [0,1]
-    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # cv2.IMREAD_GRAYSCALE
+    raw_data = np.fromfile(path, dtype=np.uint8)
+    img = cv2.imdecode(raw_data, cv2.IMREAD_UNCHANGED)  # cv2.IMREAD_GRAYSCALE
     img = img.astype(np.float32) / 255.
     if img.ndim == 2:
         img = np.expand_dims(img, axis=2)
@@ -283,14 +286,14 @@ def single2uint16(img):
 def uint2tensor4(img):
     if img.ndim == 2:
         img = np.expand_dims(img, axis=2)
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).float().div(255.).unsqueeze(0)
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1).float().div(255.).unsqueeze(0)
 
 
 # convert uint to 3-dimensional torch tensor
 def uint2tensor3(img):
     if img.ndim == 2:
         img = np.expand_dims(img, axis=2)
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).float().div(255.)
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1).float().div(255.)
 
 
 # convert 2/3/4-dimensional torch tensor to uint
@@ -308,12 +311,12 @@ def tensor2uint(img):
 
 # convert single (HxWxC) to 3-dimensional torch tensor
 def single2tensor3(img):
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).float()
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1).float()
 
 
 # convert single (HxWxC) to 4-dimensional torch tensor
 def single2tensor4(img):
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).float().unsqueeze(0)
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1).float().unsqueeze(0)
 
 
 # convert torch tensor to single
@@ -335,15 +338,15 @@ def tensor2single3(img):
 
 
 def single2tensor5(img):
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1, 3).float().unsqueeze(0)
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1, 3).float().unsqueeze(0)
 
 
 def single32tensor5(img):
-    return torch.from_numpy(np.ascontiguousarray(img)).float().unsqueeze(0).unsqueeze(0)
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).float().unsqueeze(0).unsqueeze(0)
 
 
 def single42tensor4(img):
-    return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1, 3).float()
+    return torch.from_numpy(np.ascontiguousarray(img, dtype=np.float64)).permute(2, 0, 1, 3).float()
 
 
 # from skimage.io import imread, imsave

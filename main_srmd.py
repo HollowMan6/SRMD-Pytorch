@@ -5,6 +5,7 @@
 import os.path
 import sys
 import getopt
+import traceback
 
 import numpy as np
 from scipy.io import loadmat
@@ -114,52 +115,54 @@ def main():
         degradation_vector).view(1, -1, 1, 1).float()
 
     for _, img in enumerate(L_paths):
-        # ------------------------------------
-        # (1) img_L
-        # ------------------------------------
         img_name, _ = os.path.splitext(os.path.basename(img))
-        img_L, alpha = util.imread_uint_alpha(img, n_channels=n_channels)
-        img_L = util.uint2tensor4(img_L)
-        degradation_map = degradation_vector.repeat(
-            1, 1, img_L.size(-2), img_L.size(-1))
-        img_L = torch.cat((img_L, degradation_map), dim=1)
-        img_L = img_L.to(device)
-        # Bicubic to handle alpha channel if the intended picture is supposed to have.
-        if not alpha is None and picture_format == "png":
-            alpha = util.uint2tensor4(alpha)
-            alpha = torch.nn.functional.interpolate(
-                alpha, scale_factor=sf, mode='bicubic', align_corners=False)
-            alpha = alpha.to(device)
-            alpha = torch.clamp(alpha, 0, 255)
-            alpha = util.tensor2uint(alpha)
+        try:
+            # ------------------------------------
+            # (1) img_L
+            # ------------------------------------
+            img_L, alpha = util.imread_uint_alpha(img, n_channels=n_channels)
+            # Bicubic to handle alpha channel if the intended picture is supposed to have.
+            if not alpha is None and picture_format == "png":
+                alpha = util.uint2tensor4(alpha)
+                alpha = torch.nn.functional.interpolate(
+                    alpha, scale_factor=sf, mode='bicubic', align_corners=False)
+                alpha = alpha.to(device)
+                alpha = torch.clamp(alpha, 0, 255)
+                alpha = util.tensor2uint(alpha) 
+            img_L = util.uint2tensor4(img_L)
+            degradation_map = degradation_vector.repeat(
+                1, 1, img_L.size(-2), img_L.size(-1))
+            img_L = torch.cat((img_L, degradation_map), dim=1)
+            img_L = img_L.to(device)
 
-        # ------------------------------------
-        # (2) img_E
-        # ------------------------------------
+            # ------------------------------------
+            # (2) img_E
+            # ------------------------------------
 
-        if not x8:
-            img_E = model(img_L)
-        else:
-            img_E = utils_model.test_mode(model, img_L, mode=3, sf=sf)
+            if not x8:
+                img_E = model(img_L)
+            else:
+                img_E = utils_model.test_mode(model, img_L, mode=3, sf=sf)
 
-        img_E = util.tensor2uint(img_E)
-        if not alpha is None and picture_format == "png":
-            alpha = alpha.reshape((alpha.shape[0], alpha.shape[1], 1))
-            img_E = np.concatenate((img_E, alpha), axis=2)
-        elif not alpha is None:
-            print("Warning! You lost your alpha channel for this picture!")
+            img_E = util.tensor2uint(img_E)
+            if not alpha is None and picture_format == "png":
+                alpha = alpha.reshape((alpha.shape[0], alpha.shape[1], 1))
+                img_E = np.concatenate((img_E, alpha), axis=2)
+            elif not alpha is None:
+                print("Warning! You lost your alpha channel for this picture!")
 
-        # ------------------------------------
-        # save results
-        # ------------------------------------
-        if os.path.splitext(E_path)[1]:
-            util.imsave(img_E, E_path)
-            print(E_path + " successfully saved to disk!")
-        else:
-            util.imsave(img_E, os.path.join(
-                E_path, img_name+'.' + picture_format))
-            print(os.path.join(E_path, img_name+'.' + picture_format) +
-                  " successfully saved to disk!")
+            # ------------------------------------
+            # save results
+            # ------------------------------------
+            if os.path.splitext(E_path)[1]:
+                util.imsave(img_E, E_path)
+            else:
+                util.imsave(img_E, os.path.join(
+                    E_path, img_name+'.' + picture_format))
+            print(os.path.basename(img) + " successfully saved to disk!")
+        except Exception:
+            traceback.print_exc()
+            print(os.path.basename(img) + " failed!")
 
 
 def showhelp():
@@ -176,7 +179,19 @@ def showhelp():
     print("  -c cuda              enable CUDA GPU caculating (default disabled)")
     print("  -f format            output image format (jpg/png/..., default=png)")
     print("")
-    print("Note: Supported image extensions 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'")
+    print("Note:")
+    print("")
+    print("  1. Supported image extensions 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'ppm', 'PPM', 'bmp', 'BMP', 'tif'.")
+    print("  2. This script uses the model trained by the original author for prediction. If necessary, please train the model, ")
+    print("define blur kernel and PCA dimension reduction data by yourself.")
+    print("  3. The bicubic interpolation method is used to enlarge the alpha channel, which makes up for the defect that the ")
+    print("source model does not support transparent (Alpha) channel.")
+    print("  4. the X8 performance mode (also known as TTA mode) is to perform seven different kinds of data augment operations ")
+    print("such as rotation etc., and then take the average value of each pixel after upscale. So as to improve the image quality,")
+    print("it will be 8 times slower than the original mode.")
+    print("  5. input-path and output-path accept either file path or directory path")
+    print("  6. noise-level = noise level, larger value means stronger denoise effect, -1 = no effect")
+    print("  7. scale = scale level, 2 = upscale 2x, 3 = upscale 3x, 4 = upscale 4x")
 
 
 if __name__ == '__main__':
