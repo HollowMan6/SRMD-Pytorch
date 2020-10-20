@@ -1,0 +1,90 @@
+{
+  "task": "srmd",
+  "model": "plain",
+  "gpu_ids": [
+    0
+  ],
+  "scale": 4,
+  "n_channels": 3,
+  "sigma": [
+    0,
+    50
+  ],
+  "sigma_test": 0,
+  "merge_bn": false,
+  "merge_bn_startpoint": 400000,
+  "path": {
+    "root": "superresolution",
+    "pretrained_netG": null,
+    "task": "superresolution/srmd",
+    "log": "superresolution/srmd",
+    "options": "superresolution/srmd/options",
+    "models": "superresolution/srmd/models",
+    "images": "superresolution/srmd/images"
+  },
+  "datasets": {
+    "train": {
+      "name": "train_dataset",
+      "dataset_type": "srmd",
+      "dataroot_H": "trainsets/trainH",
+      "dataroot_L": null,
+      "H_size": 96,
+      "dataloader_shuffle": true,
+      "dataloader_num_workers": 8,
+      "dataloader_batch_size": 64,
+      "phase": "train",
+      "scale": 4,
+      "n_channels": 3
+    },
+    "test": {
+      "name": "test_dataset",
+      "dataset_type": "srmd",
+      "dataroot_H": "testsets/set5",
+      "dataroot_L": null,
+      "phase": "test",
+      "scale": 4,
+      "n_channels": 3
+    }
+  },
+  "netG": {
+    "net_type": "srmd",
+    "in_nc": 19,
+    "out_nc": 3,
+    "nc": 128,
+    "nb": 12,
+    "gc": 32,
+    "ng": 2,
+    "reduction": 16,
+    "act_mode": "R",
+    "upsample_mode": "pixelshuffle",
+    "downsample_mode": "strideconv",
+    "init_type": "orthogonal",
+    "init_bn_type": "uniform",
+    "init_gain": 0.2,
+    "scale": 4
+  },
+  "train": {
+    "G_lossfn_type": "l1",
+    "G_lossfn_weight": 1.0,
+    "G_optimizer_type": "adam",
+    "G_optimizer_lr": 0.0001,
+    "G_optimizer_clipgrad": null,
+    "G_scheduler_type": "MultiStepLR",
+    "G_scheduler_milestones": [
+      200000,
+      400000,
+      600000,
+      800000,
+      1000000,
+      2000000
+    ],
+    "G_scheduler_gamma": 0.5,
+    "G_regularizer_orthstep": null,
+    "G_regularizer_clipstep": null,
+    "checkpoint_test": 50,
+    "checkpoint_save": 50,
+    "checkpoint_print": 200
+  },
+  "opt_path": "options/train_srmd.json",
+  "is_train": true
+}
