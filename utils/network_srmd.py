@@ -1,7 +1,6 @@
 
 import torch.nn as nn
 import utils.basicblock as B
-import torch
 
 """
 # --------------------------------------------
