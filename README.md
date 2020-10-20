@@ -79,6 +79,10 @@ main_srmd.py -i 输入路径 -o 输出路径 [选项]...
 
 ***注：X8性能模式（又称TTA模式）为讲图片另外进行7种不同的旋转等数据增强操作，然后取放大后各个像素点平均值，从而使得图片质量更佳，但是会比原来慢8倍***
 
+-`input-path`和`output-path`接受文件路径或目录路径
+-`noise-level`=降噪等级，值越大表示去噪效果越强，-1=不降噪
+-`scale`=放大比例，2=放大2x，3=放大3x，4=放大4x
+
 直接运行[`main_srmd.py`](main_srmd.py)即可进行模型的使用来对图片进行放大。
 
 ## 训练模型
@@ -209,6 +213,10 @@ Note: Supported image extensions 'jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'pp
 ```
 
 ***Note: the X8 performance mode (also known as TTA mode) is to perform seven different kinds of data augment operations such as rotation etc., and then take the average value of each pixel after amplification, so as to make the image quality better, it will be 8 times slower than the original mode.***
+
+- `input-path` and `output-path` accept either file path or directory path
+- `noise-level` = noise level, large value means strong denoise effect, -1 = no effect
+- `scale` = scale level, 2 = upscale 2x, 3 = upscale 3x, 4 = upscale 4x
 
 Run [`main_srmd.py`](main_srmd.py)irectly and then you can use the model to enlarge the picture。
 
