@@ -133,7 +133,7 @@ main_srmd.py -i 输入路径 -o 输出路径 [选项]...
 使用`onnx-simplifier`简化生成后的ONNX模型：
 
 ```bash
-cd onnx_model
+cd onnx_models
 pip install onnx-simplifier
 python -m onnxsim srmd_x2.onnx srmd_x2-sim.onnx
 python -m onnxsim srmd_x3.onnx srmd_x3-sim.onnx
@@ -143,7 +143,11 @@ python -m onnxsim srmdnf_x3.onnx srmdnf_x3-sim.onnx
 python -m onnxsim srmdnf_x4.onnx srmdnf_x4-sim.onnx
 ```
 
-然后就可以使用编译好的NCNN工具将ONNX模型转化成NCNN模型：
+然后就可以使用编译好的NCNN工具将ONNX模型转化成NCNN模型。
+
+这里我在[onnx2ncnn](onnx2ncnn)文件夹下准备了在Win64环境下通过使用[windows-vs2019-avx2 CI](https://github.com/Tencent/ncnn/blob/36a591da8365f3fbb33f995c4303f49d47c4d553/.github/workflows/windows-x64-cpu-vs2019.yml#L45-L56) `MSVC 19.27.29112.0`环境编译[NCNN #36a591d](https://github.com/Tencent/ncnn/tree/36a591da8365f3fbb33f995c4303f49d47c4d553)仓库得到的NCNN工具可执行文件[onnx2ncnn.exe](onnx2ncnn/onnx2ncnn.exe)。如果你的系统为Win64，在确保上述步骤已经完成的情况下，可以直接双击执行脚本[convert.cmd](onnx2ncnn/convert.cmd)，会直接在`onnx2ncnn/srmd_ncnn_models`文件夹下自动生成SRMD NCNN模型文件。
+
+否则请自行编译NCNN，得到onnx2ncnn工具。
 
 ```bash
 onnx2ncnn srmd_x2-sim.onnx srmd_x2.param srmd_x2.bin
@@ -273,7 +277,7 @@ the following steps refer to: https://github.com/Tencent/ncnn/blob/master/docs/h
 Use `onnx simplifier` to simplify the generated onnx model:
 
 ```bash
-cd onnx_model
+cd onnx_models
 pip install onnx-simplifier
 python -m onnxsim srmd_x2.onnx srmd_x2-sim.onnx
 python -m onnxsim srmd_x3.onnx srmd_x3-sim.onnx
@@ -283,7 +287,11 @@ python -m onnxsim srmdnf_x3.onnx srmdnf_x3-sim.onnx
 python -m onnxsim srmdnf_x4.onnx srmdnf_x4-sim.onnx
 ```
 
-Then, the compiled NCNN tools can be used to convert the ONNX model into the NCNN model:
+Then, the compiled NCNN tools can be used to convert the ONNX model into the NCNN model.
+
+Here I have offered [onnx2ncnn.exe](onnx2ncnn/onnx2ncnn.exe) binary file in [onnx2ncnn](onnx2ncnn) folder which is for Win64 Compiled using [windows-vs2019-avx2 CI](https://github.com/Tencent/ncnn/blob/36a591da8365f3fbb33f995c4303f49d47c4d553/.github/workflows/windows-x64-cpu-vs2019.yml#L45-L56) and [NCNN #36a591d](https://github.com/Tencent/ncnn/tree/36a591da8365f3fbb33f995c4303f49d47c4d553) with `MSVC 19.27.29112.0`. If your environment is Win64, and have completed the steps above, you can directly run [convert.cmd](onnx2ncnn/convert.cmd). Then the SRMD models will be generated under `onnx2ncnn/srmd_ncnn_models`.
+
+Otherwise please compile NCNN for your own to get onnx2ncnn.
 
 ```bash
 onnx2ncnn srmd_x2-sim.onnx srmd_x2.param srmd_x2.bin
