@@ -206,32 +206,21 @@ PixelShuffle             Reshape_27               1 1 47 52 0=2
 
 ```text
 7767517
-25 25
-Input            input                  0 1 input
-Convolution      Conv_0                   1 1 input 25 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=21888
-ReLU             Relu_1                   1 1 25 26
-Convolution      Conv_2                   1 1 26 27 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_3                   1 1 27 28
-Convolution      Conv_4                   1 1 28 29 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_5                   1 1 29 30
-Convolution      Conv_6                   1 1 30 31 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_7                   1 1 31 32
-Convolution      Conv_8                   1 1 32 33 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_9                   1 1 33 34
-Convolution      Conv_10                  1 1 34 35 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_11                  1 1 35 36
-Convolution      Conv_12                  1 1 36 37 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_13                  1 1 37 38
-Convolution      Conv_14                  1 1 38 39 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_15                  1 1 39 40
-Convolution      Conv_16                  1 1 40 41 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_17                  1 1 41 42
-Convolution      Conv_18                  1 1 42 43 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_19                  1 1 43 44
-Convolution      Conv_20                  1 1 44 45 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_21                  1 1 45 46
-Convolution      Conv_22                  1 1 46 47 0=12 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=13824
-PixelShuffle     output                   1 1 47 output 0=2
+14 14
+Input                    input                    0 1 input
+Convolution              Conv_0                   1 1 input 26 0=128 1=3 4=1 5=1 6=21888 9=1
+Convolution              Conv_2                   1 1 26 28 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_4                   1 1 28 30 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_6                   1 1 30 32 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_8                   1 1 32 34 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_10                  1 1 34 36 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_12                  1 1 36 38 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_14                  1 1 38 40 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_16                  1 1 40 42 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_18                  1 1 42 44 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_20                  1 1 44 46 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_22                  1 1 46 47 0=12 1=3 4=1 5=1 6=13824
+PixelShuffle             output                   1 1 47 output 0=2
 ```
 
 你需要将最后一行的`Reshape_27`与`52`替换为`output`来指定输出，并且把第三行和第四行`input.1`替换为`input`.
@@ -393,7 +382,7 @@ onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmdnf_x4.bin
 > The following command will generate optimized SRMD models and overwritten:
 > 
 > ```bash
-> ncnnoptimize srmd_x2.param srmd_x2.bin srmd_x2.param > > srmd_x2.bin 65536
+> ncnnoptimize srmd_x2.param srmd_x2.bin srmd_x2.param srmd_x2.bin 65536
 > ncnnoptimize srmd_x3.param srmd_x3.bin srmd_x3.param srmd_x3.bin 65536
 > ncnnoptimize srmd_x4.param srmd_x4.bin srmd_x4.param srmd_x4.bin 65536
 > ncnnoptimize srmdnf_x2.param srmdnf_x2.bin srmdnf_x2.param srmdnf_x2.bin 65536
@@ -430,32 +419,21 @@ PixelShuffle             Reshape_27               1 1 47 52 0=2
 
 ```text
 7767517
-25 25
-Input            input                  0 1 input
-Convolution      Conv_0                   1 1 input 25 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=21888
-ReLU             Relu_1                   1 1 25 26
-Convolution      Conv_2                   1 1 26 27 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_3                   1 1 27 28
-Convolution      Conv_4                   1 1 28 29 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_5                   1 1 29 30
-Convolution      Conv_6                   1 1 30 31 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_7                   1 1 31 32
-Convolution      Conv_8                   1 1 32 33 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_9                   1 1 33 34
-Convolution      Conv_10                  1 1 34 35 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_11                  1 1 35 36
-Convolution      Conv_12                  1 1 36 37 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_13                  1 1 37 38
-Convolution      Conv_14                  1 1 38 39 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_15                  1 1 39 40
-Convolution      Conv_16                  1 1 40 41 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_17                  1 1 41 42
-Convolution      Conv_18                  1 1 42 43 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_19                  1 1 43 44
-Convolution      Conv_20                  1 1 44 45 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
-ReLU             Relu_21                  1 1 45 46
-Convolution      Conv_22                  1 1 46 47 0=12 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=13824
-PixelShuffle     output                   1 1 47 output 0=2
+14 14
+Input                    input                    0 1 input
+Convolution              Conv_0                   1 1 input 26 0=128 1=3 4=1 5=1 6=21888 9=1
+Convolution              Conv_2                   1 1 26 28 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_4                   1 1 28 30 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_6                   1 1 30 32 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_8                   1 1 32 34 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_10                  1 1 34 36 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_12                  1 1 36 38 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_14                  1 1 38 40 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_16                  1 1 40 42 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_18                  1 1 42 44 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_20                  1 1 44 46 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_22                  1 1 46 47 0=12 1=3 4=1 5=1 6=13824
+PixelShuffle             output                   1 1 47 output 0=2
 ```
 
 You have to replace the `Reshape_27` and `52` in the final line with `output` to specify output, and replace `input.1` with `input` in line 3 and 4.

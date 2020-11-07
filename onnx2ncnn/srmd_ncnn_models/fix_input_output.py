@@ -9,7 +9,7 @@ for file in filelist:
     with open(file, 'r') as fp:
         lines = fp.readlines()
         lines[-1] = lines[-1].replace("Reshape_27","output    ").replace("52","output")
-        lines[2] = lines[2].replace("input.1","input")
+        lines[2] = lines[2].replace("input.1","input  ")
         lines[3] = lines[3].replace("input.1","input")
     with open(file, 'w') as fp:
         fp.writelines(lines)
