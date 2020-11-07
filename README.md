@@ -147,16 +147,96 @@ python -m onnxsim srmdnf_x4.onnx srmdnf_x4-sim.onnx
 
 这里我在[onnx2ncnn](onnx2ncnn)文件夹下准备了在Win64环境下通过使用[windows-vs2019-avx2 CI](https://github.com/Tencent/ncnn/blob/36a591da8365f3fbb33f995c4303f49d47c4d553/.github/workflows/windows-x64-cpu-vs2019.yml#L45-L56) `MSVC 19.27.29112.0`环境编译[NCNN #36a591d](https://github.com/Tencent/ncnn/tree/36a591da8365f3fbb33f995c4303f49d47c4d553)仓库得到的NCNN工具可执行文件[onnx2ncnn.exe](onnx2ncnn/onnx2ncnn.exe)。如果你的系统为Win64，在确保上述步骤已经完成的情况下，可以直接双击执行脚本[convert.cmd](onnx2ncnn/convert.cmd)，会直接在`onnx2ncnn/srmd_ncnn_models`文件夹下自动生成SRMD NCNN模型文件。
 
-否则请自行编译NCNN，得到onnx2ncnn工具。
+否则请自行编译NCNN，得到onnx2ncnn工具，然后手动执行命令:
 
 ```bash
 onnx2ncnn srmd_x2-sim.onnx srmd_x2.param srmd_x2.bin
-onnx2ncnn srmd_x3-sim.onnx srmd_x3.param srmd_x2.bin
-onnx2ncnn srmd_x4-sim.onnx srmd_x4.param srmd_x2.bin
-onnx2ncnn srmdnf_x2-sim.onnx srmdnf_x2.param srmd_x2.bin
-onnx2ncnn srmdnf_x3-sim.onnx srmdnf_x3.param srmd_x2.bin
-onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmd_x2.bin
+onnx2ncnn srmd_x3-sim.onnx srmd_x3.param srmd_x3.bin
+onnx2ncnn srmd_x4-sim.onnx srmd_x4.param srmd_x4.bin
+onnx2ncnn srmdnf_x2-sim.onnx srmdnf_x2.param srmdnf_x2.bin
+onnx2ncnn srmdnf_x3-sim.onnx srmdnf_x3.param srmdnf_x3.bin
+onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmdnf_x4.bin
 ```
+
+### 可选
+
+> 你还可以使用`ncnnoptimize`进行模型优化：(参考 https://github.com/Tencent/ncnn/wiki/use-ncnnoptimize-to-optimize-model)
+> 
+> 当然，同`onnx2ncnn`，我也提供了Win64版本的[ncnnoptimize.exe](onnx2ncnn/ncnnoptimize.exe)。如果你的系统为Win64，在确保上述步骤已经完成的情况下，可以直接双击执行脚本[optimize.cmd](onnx2ncnn/optimize.cmd)，会直接在[onnx2ncnn/srmd_ncnn_models](onnx2ncnn/srmd_ncnn_models)文件夹下自动生成优化后的SRMD NCNN模型文件并覆盖。
+> 
+> 否则请自行编译NCNN，得到ncnnoptimize工具。
+> 
+> 下面命令将会将优化后得到的模型覆盖原模型:
+> 
+> ```bash
+> ncnnoptimize srmd_x2.param srmd_x2.bin srmd_x2.param srmd_x2.bin 65536
+> ncnnoptimize srmd_x3.param srmd_x3.bin srmd_x3.param srmd_x3.bin 65536
+> ncnnoptimize srmd_x4.param srmd_x4.bin srmd_x4.param srmd_x4.bin 65536
+> ncnnoptimize srmdnf_x2.param srmdnf_x2.bin srmdnf_x2.param srmdnf_x2.bin 65536
+> ncnnoptimize srmdnf_x3.param srmdnf_x3.bin srmdnf_x3.param srmdnf_x3.bin 65536
+> ncnnoptimize srmdnf_x4.param srmdnf_x4.bin srmdnf_x4.param srmdnf_x4.bin 65536
+> ```
+
+最后，由于某些未知原因，你需要修改`*.param`中的参数，使得模型能够被[srmd-ncnn-vulkan](https://github.com/nihui/srmd-ncnn-vulkan)使用。
+
+例如:
+
+* 经过模型优化的srmd_x2.param修改前：
+
+```text
+7767517
+14 14
+Input                    input.1                  0 1 input.1
+Convolution              Conv_0                   1 1 input.1 26 0=128 1=3 4=1 5=1 6=21888 9=1
+Convolution              Conv_2                   1 1 26 28 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_4                   1 1 28 30 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_6                   1 1 30 32 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_8                   1 1 32 34 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_10                  1 1 34 36 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_12                  1 1 36 38 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_14                  1 1 38 40 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_16                  1 1 40 42 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_18                  1 1 42 44 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_20                  1 1 44 46 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_22                  1 1 46 47 0=12 1=3 4=1 5=1 6=13824
+PixelShuffle             Reshape_27               1 1 47 52 0=2
+```
+
+* 修改后：
+
+```text
+7767517
+25 25
+Input            input                  0 1 input
+Convolution      Conv_0                   1 1 input 25 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=21888
+ReLU             Relu_1                   1 1 25 26
+Convolution      Conv_2                   1 1 26 27 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_3                   1 1 27 28
+Convolution      Conv_4                   1 1 28 29 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_5                   1 1 29 30
+Convolution      Conv_6                   1 1 30 31 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_7                   1 1 31 32
+Convolution      Conv_8                   1 1 32 33 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_9                   1 1 33 34
+Convolution      Conv_10                  1 1 34 35 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_11                  1 1 35 36
+Convolution      Conv_12                  1 1 36 37 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_13                  1 1 37 38
+Convolution      Conv_14                  1 1 38 39 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_15                  1 1 39 40
+Convolution      Conv_16                  1 1 40 41 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_17                  1 1 41 42
+Convolution      Conv_18                  1 1 42 43 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_19                  1 1 43 44
+Convolution      Conv_20                  1 1 44 45 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_21                  1 1 45 46
+Convolution      Conv_22                  1 1 46 47 0=12 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=13824
+PixelShuffle     output                   1 1 47 output 0=2
+```
+
+你需要将最后一行的`Reshape_27`与`52`替换为`output`来指定输出，并且把第三行和第四行`input.1`替换为`input`.
+
+你可以直接使用Python运行[fix_input_output.py](onnx2ncnn/srmd_ncnn_models/fix_input_output.py)来进行修改。
 
 # SRMD Pytorch
 
@@ -291,13 +371,93 @@ Then, the compiled NCNN tools can be used to convert the ONNX model into the NCN
 
 Here I have offered [onnx2ncnn.exe](onnx2ncnn/onnx2ncnn.exe) binary file in [onnx2ncnn](onnx2ncnn) folder which is for Win64 Compiled using [windows-vs2019-avx2 CI](https://github.com/Tencent/ncnn/blob/36a591da8365f3fbb33f995c4303f49d47c4d553/.github/workflows/windows-x64-cpu-vs2019.yml#L45-L56) and [NCNN #36a591d](https://github.com/Tencent/ncnn/tree/36a591da8365f3fbb33f995c4303f49d47c4d553) with `MSVC 19.27.29112.0`. If your environment is Win64, and have completed the steps above, you can directly run [convert.cmd](onnx2ncnn/convert.cmd). Then the SRMD models will be generated under `onnx2ncnn/srmd_ncnn_models`.
 
-Otherwise please compile NCNN for your own to get onnx2ncnn.
+Otherwise please compile NCNN for your own to get onnx2ncnn, then manually executing the command:
 
 ```bash
 onnx2ncnn srmd_x2-sim.onnx srmd_x2.param srmd_x2.bin
-onnx2ncnn srmd_x3-sim.onnx srmd_x3.param srmd_x2.bin
-onnx2ncnn srmd_x4-sim.onnx srmd_x4.param srmd_x2.bin
-onnx2ncnn srmdnf_x2-sim.onnx srmdnf_x2.param srmd_x2.bin
-onnx2ncnn srmdnf_x3-sim.onnx srmdnf_x3.param srmd_x2.bin
-onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmd_x2.bin
+onnx2ncnn srmd_x3-sim.onnx srmd_x3.param srmd_x3.bin
+onnx2ncnn srmd_x4-sim.onnx srmd_x4.param srmd_x4.bin
+onnx2ncnn srmdnf_x2-sim.onnx srmdnf_x2.param srmdnf_x2.bin
+onnx2ncnn srmdnf_x3-sim.onnx srmdnf_x3.param srmdnf_x3.bin
+onnx2ncnn srmdnf_x4-sim.onnx srmdnf_x4.param srmdnf_x4.bin
 ```
+
+### Optimal
+
+> You can also use `ncnnoptimize` to optimize the model: (Referring to https://github.com/Tencent/ncnn/wiki/use-ncnnoptimize-to-optimize-model)
+> 
+> Of course, same as `onnx2ncnn`, I have also offered Win64 [ncnnoptimize.exe](onnx2ncnn/ncnnoptimize.exe) binary file. If your environment is Win64, and have completed the steps above, you can directly run [optimize.cmd](onnx2ncnn/optimize.cmd). Then the optimized SRMD models will be generated and overwritten under [onnx2ncnn/srmd_ncnn_models](onnx2ncnn/srmd_ncnn_models).
+> 
+> Otherwise please compile NCNN for your own to get ncnnoptimize.
+> 
+> The following command will generate optimized SRMD models and overwritten:
+> 
+> ```bash
+> ncnnoptimize srmd_x2.param srmd_x2.bin srmd_x2.param > > srmd_x2.bin 65536
+> ncnnoptimize srmd_x3.param srmd_x3.bin srmd_x3.param srmd_x3.bin 65536
+> ncnnoptimize srmd_x4.param srmd_x4.bin srmd_x4.param srmd_x4.bin 65536
+> ncnnoptimize srmdnf_x2.param srmdnf_x2.bin srmdnf_x2.param srmdnf_x2.bin 65536
+> ncnnoptimize srmdnf_x3.param srmdnf_x3.bin srmdnf_x3.param srmdnf_x3.bin 65536
+> ncnnoptimize srmdnf_x4.param srmdnf_x4.bin srmdnf_x4.param srmdnf_x4.bin 65536
+> ```
+
+Finally, due to some unkown causes, you have to modify the parameters in `*.param` so that the models can be used by [srmd-ncnn-vulkan](https://github.com/nihui/srmd-ncnn-vulkan).
+
+e.g.:
+
+* The optimized model `srmd_x2.param`, before modifying：
+
+```text
+7767517
+14 14
+Input                    input.1                  0 1 input.1
+Convolution              Conv_0                   1 1 input.1 26 0=128 1=3 4=1 5=1 6=21888 9=1
+Convolution              Conv_2                   1 1 26 28 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_4                   1 1 28 30 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_6                   1 1 30 32 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_8                   1 1 32 34 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_10                  1 1 34 36 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_12                  1 1 36 38 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_14                  1 1 38 40 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_16                  1 1 40 42 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_18                  1 1 42 44 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_20                  1 1 44 46 0=128 1=3 4=1 5=1 6=147456 9=1
+Convolution              Conv_22                  1 1 46 47 0=12 1=3 4=1 5=1 6=13824
+PixelShuffle             Reshape_27               1 1 47 52 0=2
+```
+
+* After modifying：
+
+```text
+7767517
+25 25
+Input            input                  0 1 input
+Convolution      Conv_0                   1 1 input 25 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=21888
+ReLU             Relu_1                   1 1 25 26
+Convolution      Conv_2                   1 1 26 27 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_3                   1 1 27 28
+Convolution      Conv_4                   1 1 28 29 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_5                   1 1 29 30
+Convolution      Conv_6                   1 1 30 31 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_7                   1 1 31 32
+Convolution      Conv_8                   1 1 32 33 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_9                   1 1 33 34
+Convolution      Conv_10                  1 1 34 35 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_11                  1 1 35 36
+Convolution      Conv_12                  1 1 36 37 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_13                  1 1 37 38
+Convolution      Conv_14                  1 1 38 39 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_15                  1 1 39 40
+Convolution      Conv_16                  1 1 40 41 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_17                  1 1 41 42
+Convolution      Conv_18                  1 1 42 43 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_19                  1 1 43 44
+Convolution      Conv_20                  1 1 44 45 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=147456
+ReLU             Relu_21                  1 1 45 46
+Convolution      Conv_22                  1 1 46 47 0=12 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=13824
+PixelShuffle     output                   1 1 47 output 0=2
+```
+
+You have to replace the `Reshape_27` and `52` in the final line with `output` to specify output, and replace `input.1` with `input` in line 3 and 4.
+
+You can also directly run [fix_input_output.py](onnx2ncnn/srmd_ncnn_models/fix_input_output.py) to do the modification.
