@@ -172,7 +172,7 @@ def main():
         if not x8:
             img_E = model(img_L)
         else:
-            img_E = utils_model.test_mode(model, img_L, mode=3, sf=sf)
+            img_E = utils_model.test_mode(model, img_L, mode=3, sf=sf) # lgtm [py/unreachable-statement]
 
         img_E = util.tensor2uint(img_E)
 

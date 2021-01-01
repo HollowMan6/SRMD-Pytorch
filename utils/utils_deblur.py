@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np
+import numpy as np # lgtm [py/import-and-import-from]
 import scipy
 from scipy import fftpack
 import torch
@@ -327,7 +327,7 @@ def wrap_boundary(img, img_size):
         r_A[alpha-1:, :] = A2
         r_B[:, alpha-1:] = B2
     else:
-        A2 = solve_min_laplacian(r_A[alpha-1:-alpha+1, :])
+        A2 = solve_min_laplacian(r_A[alpha-1:-alpha+1, :]) # lgtm [py/unreachable-statement]
         r_A[alpha-1:-alpha+1, :] = A2
         B2 = solve_min_laplacian(r_B[:, alpha-1:-alpha+1])
         r_B[:, alpha-1:-alpha+1] = B2
@@ -344,7 +344,7 @@ def wrap_boundary(img, img_size):
         C2 = solve_min_laplacian(r_C[alpha-1:, alpha-1:])
         r_C[alpha-1:, alpha-1:] = C2
     else:
-        C2 = solve_min_laplacian(r_C[alpha-1:-alpha+1, alpha-1:-alpha+1])
+        C2 = solve_min_laplacian(r_C[alpha-1:-alpha+1, alpha-1:-alpha+1]) # lgtm [py/unreachable-statement]
         r_C[alpha-1:-alpha+1, alpha-1:-alpha+1] = C2
     C = r_C
     # return C
